@@ -196,10 +196,11 @@ python -m streamlit run streamlit_app/app.py
 
 ---
 
-## 📬 Contact
+## 📬 Connect With Me
 
-Akash Kumar
+**Akash Kumar Barnwal**
 
-LinkedIn: (Add LinkedIn URL)
-
-GitHub: (Add GitHub URL)
+- 📧 Email: barnwalakash60973@gmail.com
+- 🔗 [LinkedIn Profile](https://www.linkedin.com/in/akash-kumar-barnwal-31968a380/)
+- 💻 [GitHub Profile](https://github.com/barnwalakash60973-pixel)
+- 📂 [Project Repository](https://github.com/barnwalakash60973-pixel/global-superstore-profit-prediction)
