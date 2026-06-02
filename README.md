@@ -204,3 +204,9 @@ python -m streamlit run streamlit_app/app.py
 - 🔗 [LinkedIn Profile](https://www.linkedin.com/in/akash-kumar-barnwal-31968a380/)
 - 💻 [GitHub Profile](https://github.com/barnwalakash60973-pixel)
 - 📂 [Project Repository](https://github.com/barnwalakash60973-pixel/global-superstore-profit-prediction)
+
+
+## 🚀 Live Demo
+
+🔗 Streamlit App:
+https://global-superstore-profit-prediction.streamlit.app/
