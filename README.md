@@ -180,6 +180,69 @@ Features:
 
 ---
 
+## 🔮 Profit Prediction Module
+
+The Profit Prediction module allows users to estimate the expected profit or loss of a future order before it is placed.
+
+### Input Features
+
+Users provide the following business attributes:
+
+* Sales
+* Discount
+* Quantity
+* Shipping Cost
+* Category
+* Sub-Category
+* Segment
+* Region
+* Order Date
+
+### Prediction Process
+
+1. User enters order information in the Streamlit interface.
+2. The frontend sends the request to the FastAPI backend.
+3. The backend applies the same feature engineering pipeline used during model training.
+4. The ensemble machine learning model generates a profit prediction.
+5. SHAP explainability identifies the most influential positive and negative factors.
+6. Results are displayed through an interactive dashboard.
+
+### Prediction Output
+
+The system returns:
+
+* Predicted Profit (Positive Value)
+* Predicted Loss (Negative Value)
+* Business Explanation Message
+* SHAP-Based Feature Contributions
+
+### Example
+
+Input:
+
+* Sales: $500
+* Discount: 10%
+* Quantity: 3
+* Category: Technology
+
+Output:
+
+* Predicted Profit: $78.45
+
+* Key Positive Drivers:
+
+  * Technology Category
+  * Low Discount
+  * Higher Quantity
+
+* Key Negative Drivers:
+
+  * Shipping Cost
+  * Seasonal Effects
+
+This enables business users to evaluate the profitability of an order before making operational decisions.
+
+
 ## 📷 Application Screenshots
 
 ### KPI Dashboard
@@ -299,6 +362,37 @@ Access:
 
 * Frontend (Streamlit): http://localhost:8501
 * Backend API Docs: http://localhost:8000/docs
+
+
+# Live Demo
+
+## Frontend
+
+Access the interactive application:
+
+https://global-superstore-profit-prediction-5chk.onrender.com/
+
+## Backend API
+
+FastAPI backend and API documentation:
+
+API Base URL:
+https://global-superstore-profit-prediction.onrender.com
+
+Swagger Documentation:
+https://global-superstore-profit-prediction.onrender.com/docs
+
+---
+
+## Features
+
+* Sales and profit prediction
+* Interactive Streamlit dashboard
+* FastAPI backend for model inference
+* Dockerized deployment
+* Cloud-hosted on Render
+
+
 
 
 ## 📬 Connect With Me
