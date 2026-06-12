@@ -284,7 +284,7 @@ Some advanced operational features available in the original dataset (such as Ma
 
 ## 📂 Project Structure
 
-
+```text
 global-superstore-profit-prediction/
 │
 ├── backend/
@@ -308,10 +308,7 @@ global-superstore-profit-prediction/
 ├── .gitignore
 ├── .dockerignore
 └── README.md
-
-
-
----
+```
 
 ### 🧠 Model Training Environment
 
