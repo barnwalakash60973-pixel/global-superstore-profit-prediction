@@ -306,7 +306,6 @@ global-superstore-profit-prediction/
 ├── docker-compose.yml
 ├── requirements.txt
 ├── .gitignore
-|── Dockerfile.frontend
 ├── .dockerignore
 └── README.md
 
