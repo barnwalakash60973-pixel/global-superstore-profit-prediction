@@ -30,6 +30,12 @@ rf_img = os.path.join(
     "rf_feature_importance.png"
 )
 
+shap = os.path.join(
+    BASE_DIR,
+    "Images",
+    "shap_explain.png"
+)
+
 
 st.set_page_config(
     page_title="Global Superstore Analytics",
@@ -53,6 +59,7 @@ if menu == "Home":
     st.title("🏪 Global Superstore Analytics")
 
     st.image(dashboard_img)
+
 
     st.markdown("""
     ### Project Highlights
@@ -83,21 +90,30 @@ elif menu == "Dataset Overview":
     
 
 
-# 3. EDA Images
 elif menu == "EDA & Insights":
 
     st.header("📈 EDA & Insights")
 
-    st.subheader("Model Interpretation")
+    st.subheader("Feature Importance Analysis")
 
     st.image(rf_img)
 
-    st.warning("""
-Key Finding:
-Sales and discount-related features are the most influential
-factors in profit prediction. While higher sales generally
-increase profit, extreme discounts often lead to reduced
-profitability and loss-making orders.
+    st.subheader("SHAP Explainability")
+
+    st.image(shap)
+
+    st.info("""
+### Key Insights
+
+✅ Sales and discount-related features are the strongest drivers of profit predictions.
+
+✅ Discount strategies can significantly impact profitability, depending on the sales value and product type.
+
+✅ High sales do not always translate into higher profit.
+
+✅ Shipping and product characteristics also contribute to profit outcomes, though with lower influence.
+
+✅ SHAP explanations provide transparency by showing which features increase or decrease the predicted profit for each order.
 """)
     
 

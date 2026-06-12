@@ -156,7 +156,7 @@ def _compute_shap_explanation(
     preprocessor  = _state.pipeline.named_steps["preprocessor"]
     explainer     = _state.explainer
     feature_names = _state.feature_names
-    print("Feature names:", len(feature_names))
+    
 
 
     # Transform input with the same preprocessor the pipeline uses ----------
