@@ -20,6 +20,9 @@ API_URL = os.getenv(
 
 APP_URL = f"{API_URL}/predict"
 
+st.write("API_URL:", API_URL)
+st.write("APP_URL:", APP_URL)
+
 dashboard_img = os.path.join(
     BASE_DIR,
     "Images",
