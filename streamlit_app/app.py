@@ -14,7 +14,7 @@ BASE_DIR = os.path.dirname(__file__)
 
 
 API_URL = os.getenv(
-    "APP_URL",
+    "API_URL",
     "http://localhost:8000"
 )
 
