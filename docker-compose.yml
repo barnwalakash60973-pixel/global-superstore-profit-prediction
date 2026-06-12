@@ -1,0 +1,18 @@
+services:
+  backend:
+    build: .
+    container_name: profit-backend
+    command: uvicorn backend.main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build: .
+    container_name: profit-frontend
+    command: streamlit run streamlit_app/app.py --server.address=0.0.0.0 --server.port=8501
+    ports:
+      - "8501:8501"
+    depends_on:
+      - backend
+    environment:
+      APP_URL: http://backend:8000/predict

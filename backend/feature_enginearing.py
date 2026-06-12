@@ -1,14 +1,8 @@
-import os
-import joblib
+
 import pandas as pd
 import numpy as np
 
-MODEL_PATH = os.path.join(
-    os.path.dirname(__file__),
-    "ensemble_pipeline.pkl"
-)
 
-model = joblib.load(MODEL_PATH)
 
 
 def disc_bucket(d):
@@ -23,9 +17,28 @@ def disc_bucket(d):
     return "4_extreme"
 
 
+
 def feature_extraction(df):
 
     df = df.copy()
+
+    # Estimated monetary value of the discount applied to an order.
+    # Helps quantify the financial impact of discounting strategies.
+    df['discount_amount'] = df['Sales'] * df['Discount']
+
+    # Ratio of shipping cost relative to order value.
+    # Useful for identifying orders where logistics costs are disproportionately high.
+    df['shipping_cost_ratio'] = (
+                df['Shipping Cost'] / (df['Sales'] + 1)
+         )
+
+    # Average revenue generated per unit sold.
+    # Helps distinguish high-value products from low-value products.
+    df['sales_per_unit'] = (
+             df['Sales'] / df['Quantity']
+           )
+
+
 
     df["discount_bucket"] = df["Discount"].apply(disc_bucket)
 
@@ -47,37 +60,3 @@ def feature_extraction(df):
 
 
     return df
-
-def predict_profit(
-    sales,
-    discount,
-    quantity,
-    shipping_cost,
-    category,
-    segment,
-    sub_category,
-    region,
-    order_date
-):
-
-    year = order_date.year
-    weeknum = order_date.isocalendar()[1]
-
-    df = pd.DataFrame({
-        "Sales":[sales],
-        "Discount":[discount],
-        "Quantity":[quantity],
-        "Shipping Cost":[shipping_cost],
-        "Category":[category],
-        "Segment":[segment],
-        "Sub-Category":[sub_category],
-        "Region":[region],
-        "Year":[year],
-        "weeknum":[weeknum]
-    })
-
-    df = feature_extraction(df)
-
-    prediction = model.predict(df)
-
-    return prediction[0]

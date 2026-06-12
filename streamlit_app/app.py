@@ -1,9 +1,22 @@
 import streamlit as st
-from prediction import predict_profit
-from constants import SUB_CATEGORIES, CATEGORIES, SEGMENTS, REGIONS
+import requests
+import sys
 import os
 
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(ROOT_DIR)
+
+from backend.constants import SUB_CATEGORIES, CATEGORIES, SEGMENTS, REGIONS
+
+
 BASE_DIR = os.path.dirname(__file__)
+
+
+
+APP_URL = os.getenv(
+    "APP_URL",
+    "http://127.0.0.1:8000/predict"
+)
 
 dashboard_img = os.path.join(
     BASE_DIR,
@@ -48,7 +61,7 @@ if menu == "Home":
     - 140+ Countries
     - Profit Prediction using ML
     - Ensemble Model (RF + GB)
-    - R² ≈ 0.76
+    - R² ≈ 0.77
     - Business Intelligence Dashboard
     """)
 
@@ -108,36 +121,53 @@ elif menu == "Profit Prediction":
 
     st.header("Profit Prediction")
 
+    
+
     sales = st.number_input(
     "Sales($)",
-    min_value=0.0,
-    value=0.0
+    min_value=1.0,
+    value=100.0,
+    step=1.0
 )
+    if sales < 15:
+        st.warning(
+        "Predictions for very small sales values may be less reliable."
+    )
+    
 
     discount = st.number_input(
         "Discount",
-        min_value=0.01,
-        max_value=100.00
-    )
+        min_value=0.0,
+        max_value=1.0,
+        value=0.1,
+        step=0.01
+       )
 
     quantity = st.number_input(
         "Quantity",
-        min_value=1
+        min_value=1,
+        value=1,
+        step=1
     )
 
     shipping_cost = st.number_input(
-        "Shipping Cost($)"
-    )
-
-    sub_category = st.selectbox(
-    "Sub-Category",
-    SUB_CATEGORIES
+        "Shipping Cost($)",
+         min_value=0.0,
+         value=0.0,
+         step=0.5
     )
 
     category = st.selectbox(
     "Category",
-    CATEGORIES
+    list(SUB_CATEGORIES.keys())
+)
+
+    sub_category = st.selectbox(
+    "Sub-Category",
+    SUB_CATEGORIES[category]
     )
+
+    
 
     segment = st.selectbox(
     "Segment",
@@ -166,7 +196,7 @@ elif menu == "Profit Prediction":
         if quantity <= 0:
             missing.append("Quantity")
 
-        if shipping_cost <= 0:
+        if shipping_cost < 0:
             missing.append("Shipping Cost")
 
         # Discount can be 0, so check differently
@@ -180,72 +210,171 @@ elif menu == "Profit Prediction":
         )
 
         else:
-            pred = predict_profit(
-            sales,
-            discount,
-            quantity,
-            shipping_cost,
-            category,
-            segment,
-            sub_category,
-            region,
-            order_date
-        )
+            payload = {
+                "sales": sales,
+                "discount": discount,
+                "quantity": quantity,
+                "shipping_cost": shipping_cost,
+                "category": category,
+                "segment": segment,
+                "sub_category": sub_category,
+                "region": region,
+                "order_date": str(order_date)
+            }
 
-            if pred > 0:
-                st.success(f"💰 Predicted Profit: ${pred:.2f}")
-                st.info("This order is expected to be profitable.")
+            response = requests.post(APP_URL, json=payload)
+
+            if response.status_code == 200:
+
+                result = response.json()
+
+                pred = result["predicted_profit"]
+
+                if pred > 0:
+                    st.success(f"💰 Predicted Profit: ${pred:.2f}")
+                else:
+                    st.error(f"📉 Predicted Loss: ${abs(pred):.2f}")
+
+                st.info(result["message"])
+
+                # SHAP Explanation
+                st.subheader("🔍 Model Explanation")
+
+                st.write("### Positive Drivers")
+
+                shown_messages = set()
+
+                for item in result["shap_explanation"]["positive_drivers"]:
+                    feature = item["feature"]
+
+                    if feature == "Discount":
+                        message = "Discount"
+
+                    elif feature == "Region: West":
+                        message = "West region"
+
+                    elif feature == "Quantity":
+                        message = "Order quantity"
+
+                    elif feature == "Shipping Cost Ratio":
+                        message = "Sales-to-shipping ratio"
+
+                    else:
+                        message = feature
+
+                    if message not in shown_messages:
+                        st.success(f"✅ {message} ({item['shap_value']:.2f})")
+                        shown_messages.add(message)
+
+
+                st.write("### Negative Drivers")
+
+                shown_messages = set()
+
+                for item in result["shap_explanation"]["negative_drivers"]:
+                    feature = item["feature"]
+
+                    if feature == "Sub-Category: Copiers":
+                        message = "Copiers category"
+
+                    elif feature in ["Sales", "Sales (Log Scale)"]:
+                        message = "Sales"
+
+                    elif feature == "Shipping Cost":
+                        message = "Shipping cost"
+
+                    else:
+                        message = feature
+
+                    if message not in shown_messages:
+                        st.warning(f"⚠️ {message} ({item['shap_value']:.2f})")
+                        shown_messages.add(message)
             else:
-                st.error(f"📉 Predicted Loss: ${abs(pred):.2f}")
-                st.warning("This order may result in a loss.")
-
+                st.error(f"API Error: {response.status_code}")
+                st.write(response.text)
 
 # 6. About Project
 elif menu == "About":
 
     st.header("👨‍💻 About Project")
 
-    st.markdown("""
-    ### Global Superstore Analytics & Profit Prediction
+    st.markdown("""### 🌍 Global Superstore Analytics & Profit Prediction
 
-    Developed an end-to-end retail analytics and machine learning solution
-    using the Global Superstore dataset.
+Developed an end-to-end retail analytics, machine learning, and explainable AI solution using the Global Superstore dataset. The project combines data analysis, statistical validation, predictive modeling, model interpretability, and interactive deployment to support business decision-making.
 
-    ### Dataset
-    - 51K+ Orders
-    - 140+ Countries
-    - Multi-year retail transactions
+### 📊 Dataset
 
-    ### Project Components
-    - Data Cleaning & Preprocessing
-    - Feature Engineering
-    - Exploratory Data Analysis (EDA)
-    - Statistical Hypothesis Testing
-    - Machine Learning Model Comparison
-    - Ensemble Learning (RF + GB)
-    - Interactive Streamlit Dashboard
+* 51,000+ Retail Orders
+* 140+ Countries
+* Multiple Years of Transaction Data
+* Sales, Profit, Discount, Shipping, Customer, and Regional Information
 
-    ### Hypothesis Testing
-    - H1: Profit differs across customer segments
-    - H2: Technology is more profitable than Furniture
-    - H3: Discounts negatively impact profit
-    - H4: Profit differs across global markets
-    - H5: Same-Day shipping improves profitability
+### 🔧 Project Components
 
-    ### Final Model
-    - Ensemble (Random Forest + Gradient Boosting)
-    - R² ≈ 0.76
+* Data Cleaning & Preprocessing
+* Feature Engineering
+* Exploratory Data Analysis (EDA)
+* Statistical Hypothesis Testing
+* Machine Learning Model Development
+* Ensemble Learning (Random Forest + Gradient Boosting)
+* SHAP-Based Model Explainability
+* FastAPI Backend Development
+* Interactive Streamlit Dashboard
+* Docker Containerization
 
-    ### Key Business Findings
-    - High discounts significantly reduce profitability
-    - Technology is the most profitable category
-    - APAC is the highest-profit market
-    - Nearly 25% of orders are loss-making
+### 📈 Hypothesis Testing
 
-    ### Technologies
-    Python, Pandas, NumPy, Matplotlib,
-    Scikit-Learn, Streamlit
+* H1: Profit differs across customer segments
+* H2: Technology products are more profitable than Furniture
+* H3: Discounts negatively impact profit
+* H4: Profit differs across global markets
+* H5: Same-Day shipping improves profitability
 
-    ### Author
-    Akash Kumar
-    """)
+### 🤖 Machine Learning Solution
+
+* Compared multiple regression models
+* Built an Ensemble Model using:
+
+  * Random Forest Regressor
+  * Gradient Boosting Regressor
+* Achieved R² ≈ 0.77 on unseen data
+
+### 🔍 Explainable AI (SHAP)
+
+Implemented SHAP (SHapley Additive Explanations) to make model predictions transparent and interpretable. 
+The system identifies the top positive and negative factors influencing each profit prediction, 
+helping users understand why an order is expected to be profitable or loss-making.
+
+Examples of explained drivers:
+
+* Discount Impact
+* Sales Contribution
+* Shipping Cost Effect
+* Product Category Influence
+* Regional Profitability Patterns
+
+### 💡 Key Business Insights
+
+* High discounts significantly reduce profitability
+* Technology is the most profitable category
+* APAC generates the highest overall profit
+* Approximately 25% of orders are loss-making
+* Shipping and discount strategies strongly influence profit outcomes
+
+### 🚀 Deployment
+
+* FastAPI REST API for prediction serving
+* Streamlit Web Application for user interaction
+* Dockerized architecture for reproducible deployment
+
+### 🛠️ Technologies Used
+
+### 🛠️ Technologies Used
+
+Python, Pandas, NumPy, Scikit-Learn, SHAP, FastAPI, Streamlit, 
+Docker, Matplotlib, Seaborn, Joblib, Pydantic
+
+### 👨‍💻 Author
+
+Akash Kumar Barnwal
+""")
