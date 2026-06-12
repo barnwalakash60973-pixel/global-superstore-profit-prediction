@@ -13,10 +13,12 @@ BASE_DIR = os.path.dirname(__file__)
 
 
 
-APP_URL = os.getenv(
+API_URL = os.getenv(
     "APP_URL",
-    "http://127.0.0.1:8000/predict"
+    "http://localhost:8000"
 )
+
+APP_URL = f"{API_URL}/predict"
 
 dashboard_img = os.path.join(
     BASE_DIR,
