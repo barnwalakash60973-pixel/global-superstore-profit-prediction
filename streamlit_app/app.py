@@ -2,6 +2,8 @@ import streamlit as st
 import requests
 import sys
 import os
+import time
+
 
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(ROOT_DIR)
@@ -241,6 +243,19 @@ elif menu == "Profit Prediction":
                 "region": region,
                 "order_date": str(order_date)
             }
+
+            with st.spinner("Starting prediction service..."):
+
+                for _ in range(3):
+                    try:
+                       requests.get(
+                       "https://global-superstore-profit-prediction.onrender.com/health",
+                       timeout=30
+                       )
+                       break
+
+                    except:
+                        time.sleep(10)
 
             response = requests.post(APP_URL, json=payload)
 
