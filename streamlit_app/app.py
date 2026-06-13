@@ -244,18 +244,32 @@ elif menu == "Profit Prediction":
                 "order_date": str(order_date)
             }
 
+            
             with st.spinner("Starting prediction service..."):
+
+                backend_ready = False
 
                 for _ in range(3):
                     try:
-                       requests.get(
-                       "https://global-superstore-profit-prediction.onrender.com/health",
-                       timeout=30
-                       )
-                       break
+                        response = requests.get(
+                  "https://global-superstore-profit-prediction.onrender.com/health",
+                    timeout=30
+                 )
 
-                    except:
-                        time.sleep(10)
+                        if response.status_code == 200:
+                            backend_ready = True
+                            break
+
+                    except Exception:
+                        pass
+
+                    time.sleep(10)
+
+                if not backend_ready:
+                   st.error(
+              "Prediction service is still starting. Please try again in 30-60 seconds."
+              )
+                   st.stop()
 
             response = requests.post(APP_URL, json=payload)
 
