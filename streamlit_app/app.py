@@ -249,25 +249,26 @@ elif menu == "Profit Prediction":
 
                 backend_ready = False
 
-                for _ in range(3):
+                for _ in range(12):
                     try:
                         response = requests.get(
                   "https://global-superstore-profit-prediction.onrender.com/health",
-                    timeout=30
+                    timeout=10
                  )
 
                         if response.status_code == 200:
                             backend_ready = True
                             break
 
-                    except Exception:
-                        pass
+                    except Exception as e:
+                        st.write(f"Wake-up attempt failed: {e}")
+
 
                     time.sleep(10)
 
                 if not backend_ready:
                    st.error(
-              "Prediction service is still starting. Please try again in 30-60 seconds."
+              "Prediction service could not be started. Please try again later."
               )
                    st.stop()
 
