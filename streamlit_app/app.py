@@ -17,11 +17,11 @@ BASE_DIR = os.path.dirname(__file__)
 
 API_URL = os.getenv(
     "API_URL",
-    "http://localhost:8000"
+    "https://global-superstore-profit-prediction.onrender.com"
 )
 
 APP_URL = f"{API_URL}/predict"
-
+HEALTH_URL = f"{API_URL}/health"
 
 
 dashboard_img = os.path.join(
@@ -245,32 +245,33 @@ elif menu == "Profit Prediction":
             }
 
             
-            with st.spinner("Starting prediction service..."):
+            status_box = st.empty()
+            backend_ready = False
+            MAX_ATTEMPTS = 12
 
-                backend_ready = False
+            for attempt in range(1, MAX_ATTEMPTS + 1):
+                status_box.info(
+                    f"⏳ Waking up backend… attempt {attempt}/{MAX_ATTEMPTS}. "
+                    "Render free tier sleeps after inactivity — this may take up to 2 min."
+                )
+                try:
+                    r = requests.get(HEALTH_URL, timeout=10)
+                    if r.status_code == 200:
+                        backend_ready = True
+                        status_box.empty()
+                        break
+                except Exception as e:
+                    status_box.warning(
+            f"⏳ Attempt {attempt}/{MAX_ATTEMPTS} — backend not ready yet. "
+            "Server may be in sleep mode, retrying..."
+        )
 
-                for _ in range(12):
-                    try:
-                        response = requests.get(
-                  "https://global-superstore-profit-prediction.onrender.com/health",
-                    timeout=10
-                 )
+                if attempt < MAX_ATTEMPTS:
+                  time.sleep(10)
 
-                        if response.status_code == 200:
-                            backend_ready = True
-                            break
-
-                    except Exception as e:
-                        st.write(f"Wake-up attempt failed: {e}")
-
-
-                    time.sleep(10)
-
-                if not backend_ready:
-                   st.error(
-              "Prediction service could not be started. Please try again later."
-              )
-                   st.stop()
+            if not backend_ready:
+                st.error("Backend could not be reached after 2 minutes. Please try again.")
+                st.stop()
 
             response = requests.post(APP_URL, json=payload)
 
