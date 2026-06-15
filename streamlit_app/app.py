@@ -247,7 +247,7 @@ elif menu == "Profit Prediction":
             
             status_box = st.empty()
             backend_ready = False
-            MAX_ATTEMPTS = 12
+            MAX_ATTEMPTS = 18
 
             for attempt in range(1, MAX_ATTEMPTS + 1):
                 status_box.info(
