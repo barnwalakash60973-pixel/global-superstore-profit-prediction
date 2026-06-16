@@ -295,7 +295,7 @@ def _predict_with_explanation(req: PredictionRequest) -> PredictionResponse:
         message = "This order is expected to be profitable."
     else:
         status  = "Loss"
-        message = "This order is expected to incur a loss."
+        message = "You may lose money on this order."
 
     return PredictionResponse(
         predicted_profit=round(predicted_profit, 4),
@@ -339,8 +339,4 @@ def predict(req: PredictionRequest) -> PredictionResponse:
 # ---------------------------------------------------------------------------
 @app.get("/health", tags=["Ops"])
 def health():
-    return {
-        "status": "ok",
-        "model_loaded": _state is not None,
-        "n_features": len(_state.feature_names) if _state else None,
-    }
+    return {"status": "ok"}
