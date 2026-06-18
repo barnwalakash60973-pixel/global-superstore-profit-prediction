@@ -1,35 +1,40 @@
 # 🏪 Global Superstore Profit Prediction
 
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-ML-orange)
+![FastAPI](https://img.shields.io/badge/FastAPI-Backend-green)
+![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-red)
+![Docker](https://img.shields.io/badge/Docker-Containerization-blue)
 
-## 📌 Project Overview
-
-This project analyzes the Global Superstore dataset and builds an end-to-end Machine Learning solution to predict order-level profit based on sales, discounts, customer segments, product categories, and regional information.
-
-The solution combines Exploratory Data Analysis (EDA), Statistical Hypothesis Testing, Ensemble Machine Learning, Explainable AI (SHAP), FastAPI backend services, and an interactive Streamlit dashboard to generate business insights and profit forecasts.
-
-### 🔄 Prediction Workflow
-
-User → Streamlit → FastAPI → Ensemble ML Model → SHAP Explanation → Result
+**End-to-end Machine Learning system for profit forecasting using ensemble learning, SHAP explainability, FastAPI, and Streamlit.**
 
 ---
 
-## 🏗️ System Architecture
+## 📌 Overview
 
-![Architecture](streamlit_app/Images/system_architecture.png)
+This project analyzes the Global Superstore dataset and predicts order-level profit using machine learning. It combines exploratory data analysis, statistical testing, ensemble learning, explainable AI (SHAP), FastAPI backend services, and an interactive Streamlit dashboard to generate business insights and profit forecasts.
 
 ---
 
-## 🎯 Business Problem
+## 🌐 Live Demo
 
-Businesses often struggle to identify factors that drive profitability.
+### Frontend
 
-This project aims to:
+https://global-superstore-profit-prediction-5chk.onrender.com/
 
-* Understand sales and profit patterns
-* Identify loss-making scenarios
-* Measure the impact of discounts on profitability
-* Generate business insights through KPI dashboards
-* Predict profit for new orders using Machine Learning
+### Backend API
+
+https://global-superstore-profit-prediction.onrender.com/docs
+
+---
+
+## 🎯 Objectives
+
+* Analyze sales and profitability patterns
+* Measure the impact of discounts on profit
+* Identify key profit drivers
+* Predict profit for future orders
+* Provide explainable predictions using SHAP
 
 ---
 
@@ -42,30 +47,6 @@ This project aims to:
 * Multiple Product Categories
 * Sales, Profit, Discount, Shipping Cost
 * Customer Segments and Regions
-
----
-
-## 🔍 Exploratory Data Analysis
-
-Key analyses performed:
-
-* Sales Distribution Analysis
-* Profitability Analysis
-* Segment-wise Performance
-* Category & Sub-Category Analysis
-* Regional Performance Analysis
-* Discount Impact Analysis
-* Shipping Cost Analysis
-
-### Key Insights
-
-✅ Consumer segment contributes the highest sales and profit.
-
-✅ Extreme discounts significantly reduce profitability.
-
-✅ Technology products generally generate higher profits.
-
-✅ High sales do not always guarantee high profit.
 
 ---
 
@@ -84,33 +65,19 @@ The project validates business assumptions using statistical testing:
 
 ## 🤖 Machine Learning Solution
 
-### Feature Engineering
-
-Engineered features include:
-
-* Log Sales
-* Log Shipping Cost
-* Discount Buckets
-* High Discount Indicator
-* Category Flags
-* Segment Flags
-* Time-Based Features
-
-### Models Trained
+### Models
 
 * Random Forest Regressor
 * Gradient Boosting Regressor
 * Weighted Ensemble Model
 
-### Final Model
+### Final Ensemble
 
-Weighted Ensemble:
-
+```text
 Profit Prediction = 0.4 × Random Forest + 0.6 × Gradient Boosting
+```
 
----
-
-## 📈 Model Performance
+### Model Performance
 
 | Metric   | Score |
 | -------- | ----- |
@@ -124,124 +91,32 @@ The ensemble model achieved strong predictive performance while maintaining inte
 
 ## 🔍 Explainable AI with SHAP
 
-To improve model transparency and trustworthiness, SHAP (SHapley Additive Explanations) was integrated into the prediction pipeline.
+SHAP (SHapley Additive Explanations) was integrated to improve model transparency and explain individual predictions.
 
-SHAP explains individual profit predictions by quantifying how each feature contributes to increasing or decreasing the predicted profit.
+Key benefits:
 
-### Features Explained
+* Transparent model predictions
+* Business-friendly interpretation
+* Identification of important profit drivers
+* Improved stakeholder trust
 
-* Sales
-* Discount
-* Discount Amount
-* Shipping Cost
-* Product Category
-* Sub-Category
-* Customer Segment
-* Region
-* Time-Based Features
-
-### Example Interpretation
-
-For a predicted order profit:
-
-* Positive Drivers increase the predicted profit.
-* Negative Drivers decrease the predicted profit.
-* Each SHAP value represents the contribution of a feature to the final prediction.
-
-Example:
-
-* Discount Amount (+13.28) → increased predicted profit.
-* Discount (+11.84) → increased predicted profit.
-* Sales (-19.04) → reduced predicted profit.
-
-### Benefits
-
-✅ Transparent model predictions
-
-✅ Business-friendly interpretation of ML outputs
-
-✅ Identification of key profit drivers
-
-✅ Improved stakeholder trust in model recommendations
-
-The Streamlit application provides real-time SHAP explanations alongside each profit prediction, allowing users to understand why a prediction was generated rather than only viewing the final profit estimate.
+The Streamlit application provides real-time SHAP explanations alongside each profit prediction.
 
 ---
 
-## 🖥️ Streamlit Application
+## 🖥️ Application Features
 
-Features:
-
-* Dataset Overview
-* EDA & Business Insights
-* KPI Dashboard
+* Interactive KPI Dashboard
+* Exploratory Data Analysis
+* Business Insights
 * Profit Prediction Interface
 * Real-Time Profit Forecasting
+* SHAP-Based Explanations
+* FastAPI Backend
+* Streamlit Frontend
+* Dockerized Deployment
 
 ---
-
-## 🔮 Profit Prediction Module
-
-The Profit Prediction module allows users to estimate the expected profit or loss of a future order before it is placed.
-
-### Input Features
-
-Users provide the following business attributes:
-
-* Sales
-* Discount
-* Quantity
-* Shipping Cost
-* Category
-* Sub-Category
-* Segment
-* Region
-* Order Date
-
-### Prediction Process
-
-1. User enters order information in the Streamlit interface.
-2. The frontend sends the request to the FastAPI backend.
-3. The backend applies the same feature engineering pipeline used during model training.
-4. The ensemble machine learning model generates a profit prediction.
-5. SHAP explainability identifies the most influential positive and negative factors.
-6. Results are displayed through an interactive dashboard.
-
-### Prediction Output
-
-The system returns:
-
-* Predicted Profit (Positive Value)
-* Predicted Loss (Negative Value)
-* Business Explanation Message
-* SHAP-Based Feature Contributions
-
-### Example
-
-Input:
-
-* Sales: $500
-* Discount: 10%
-* Quantity: 3
-* Category: Technology
-
-Output:
-
-* Predicted Profit: $78.45
-
-* Key Positive Drivers:
-
-  * Technology Category
-  * Low Discount
-  * Higher Quantity
-
-* Key Negative Drivers:
-
-  * Shipping Cost
-  * Seasonal Effects
-
-This enables business users to evaluate the profitability of an order before making operational decisions.
-
 
 ## 📷 Application Screenshots
 
@@ -249,36 +124,13 @@ This enables business users to evaluate the profitability of an order before mak
 
 ![KPI Dashboard](streamlit_app/Images/dashboard.png)
 
-
 ### Feature Importance Analysis
 
 ![Feature Importance](streamlit_app/Images/rf_feature_importance.png)
 
 ### Profit Prediction Interface
-ℹ️ Prediction Note
-
-This prediction is generated using key business features including Sales, Discount, Quantity, Shipping Cost, Category, Segment, Region, Sub-Category, and Order Date.
-
-Some advanced operational features available in the original dataset (such as Market, Shipping Days, and Order Priority) are not included in the prediction interface to keep the application simple and user-friendly. Therefore, predicted values should be interpreted as estimates rather than exact business outcomes.
-
-
-#### Profit Prediction Example
 
 ![Profit Prediction](streamlit_app/Images/prediction_result.png)
-
----
-
-## 🛠️ Tech Stack
-
-* Python
-* Pandas
-* NumPy
-* Scikit-Learn
-* SHAP
-* FastAPI
-* Streamlit
-* Docker
-* Joblib
 
 ---
 
@@ -310,12 +162,33 @@ global-superstore-profit-prediction/
 └── README.md
 ```
 
-### 🧠 Model Training Environment
+### 🧠 Model Training
 
-The machine learning model was trained and evaluated using Kaggle Notebooks due to hardware limitations on the local machine. The trained ensemble pipeline was then exported and integrated into the FastAPI backend for deployment.
+Model training and evaluation were performed in Kaggle Notebooks. The final ensemble pipeline was exported and integrated into the FastAPI backend for deployment.
 
-This approach enabled efficient experimentation while maintaining a lightweight local deployment architecture.
+---
 
+## 🛠️ Tech Stack
+
+### Data Science & Machine Learning
+
+* Python
+* Pandas
+* NumPy
+* Scikit-Learn
+* SHAP
+
+### Backend & Frontend
+
+* FastAPI
+* Streamlit
+
+### Deployment
+
+* Docker
+* Joblib
+
+---
 
 ## 🚀 Run Locally
 
@@ -329,7 +202,7 @@ docker compose up --build
 
 Access:
 
-* Frontend (Streamlit): http://localhost:8501
+* Frontend: http://localhost:8501
 * Backend API Docs: http://localhost:8000/docs
 
 ---
@@ -348,7 +221,7 @@ Start FastAPI Backend:
 uvicorn backend.main:app --reload
 ```
 
-Start Streamlit Frontend (new terminal):
+Start Streamlit Frontend:
 
 ```bash
 streamlit run streamlit_app/app.py
@@ -356,48 +229,14 @@ streamlit run streamlit_app/app.py
 
 Access:
 
-* Frontend (Streamlit): http://localhost:8501
+* Frontend: http://localhost:8501
 * Backend API Docs: http://localhost:8000/docs
 
-
-# Live Demo
-
-## Frontend
-
-Access the interactive application:
-
-https://global-superstore-profit-prediction-5chk.onrender.com/
-
-## Backend API
-
-FastAPI backend and API documentation:
-
-API Base URL:
-https://global-superstore-profit-prediction.onrender.com
-
-Swagger Documentation:
-https://global-superstore-profit-prediction.onrender.com/docs
-
 ---
-
-## Features
-
-* Sales and profit prediction
-* Interactive Streamlit dashboard
-* FastAPI backend for model inference
-* Dockerized deployment
-* Cloud-hosted on Render
-
-
-
 
 ## 📬 Connect With Me
 
 **Akash Kumar Barnwal**
 
-- 📧 Email: barnwalakash60973@gmail.com
-- 🔗 [LinkedIn Profile](https://www.linkedin.com/in/akash-kumar-barnwal-31968a380/)
-- 💻 [GitHub Profile](https://github.com/barnwalakash60973-pixel)
-- 📂 [Project Repository](https://github.com/barnwalakash60973-pixel/global-superstore-profit-prediction)
-
-
+* LinkedIn: https://www.linkedin.com/in/akash-kumar-barnwal-31968a380/
+* GitHub: https://github.com/barnwalakash60973-pixel
