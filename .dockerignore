@@ -1,0 +1,6 @@
+myvenv/
+.git/
+__pycache__/
+*.pyc
+.gitignore
+.ipynb_checkpoints/
